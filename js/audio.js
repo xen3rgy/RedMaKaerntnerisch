@@ -307,6 +307,12 @@ if (sttBtn) {
       return;
     }
 
+    // Prevent double clicks while processing
+    sttBtn.disabled = true;
+    sttBtn.setAttribute("aria-busy", "true");
+
+    try {
+
     // Public deployment: STT runs via the server-side proxy (/api/stt).
     // No API keys in the browser.
 
@@ -383,7 +389,7 @@ if (sttBtn) {
 
     notify(audioMode === 'chat' ? 'Transkription + Chat-Antwort bereit.' : 'Transkription + Dialekt bereit.');
 
-  } catch (err) {
+    } catch (err) {
     console.error("STT Exception:", err);
     notify("Fehler bei der Transkription. Siehe Konsole.");
   } finally {

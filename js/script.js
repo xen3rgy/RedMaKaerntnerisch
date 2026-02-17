@@ -530,10 +530,11 @@ async function chatWithDialect(history) {
         if (window.RK_Eval && typeof window.RK_Eval.setLastSample === 'function') {
           window.RK_Eval.setLastSample({ mode: 'translate_text', input: t, output: translated });
         }
-      } catch (err) {
+	      } catch (err) {
         console.error(err);
         messages.removeChild(thinking);
-        const fallback = toKaerntnerisch(t) || 'I bin ma ned sicher – probier's no amoi.';
+	        // Use double quotes here so the apostrophe in "probier's" doesn't break JS parsing.
+	        const fallback = toKaerntnerisch(t) || "I bin ma ned sicher – probier's no amoi.";
         addBubble(messages, fallback, 'assistant');
         if (window.RK_Eval && typeof window.RK_Eval.setLastSample === 'function') {
           window.RK_Eval.setLastSample({ mode: 'translate_text_fallback', input: t, output: fallback });
