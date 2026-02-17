@@ -1,0 +1,7 @@
+{
+  "name": "red-ma-kaerntnerisch",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  }
+}
