@@ -276,8 +276,13 @@
         likeBtn.type = 'button';
         likeBtn.className = 'btn btn-ghost btn-xs flex items-center gap-2 ' + (liked ? 'text-rose-600 dark:text-rose-400' : 'text-slate-600 dark:text-slate-300');
         likeBtn.setAttribute('aria-label', liked ? 'Like entfernen' : 'Like geben');
+        // NOTE: Don't use the white-heart emoji (🤍) for the unliked state.
+        // It becomes invisible in light mode. Use text hearts that can be styled via CSS.
+        const HEART_ON = "\u2665\uFE0E";  // ♥︎ (text-style heart)
+        const HEART_OFF = "\u2661";       // ♡ (outline heart)
+
         likeBtn.innerHTML = `
-          <span class="text-base" aria-hidden="true">${liked ? '❤️' : '🤍'}</span>
+          <span class="text-base leading-none" aria-hidden="true">${liked ? HEART_ON : HEART_OFF}</span>
           <span class="text-[12px] font-semibold">${entry.likes || 0}</span>
         `;
 
