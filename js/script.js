@@ -534,7 +534,7 @@ async function chatWithDialect(history) {
         console.error(err);
         messages.removeChild(thinking);
 	        // Use double quotes here so the apostrophe in "probier's" doesn't break JS parsing.
-	        const fallback = toKaerntnerisch(t) || "I bin ma ned sicher – probier's no amoi.";
+	        const fallback = toKaerntnerisch(t) || "I bin ma ned sicher – probier's no amoi."; //Test Push
         addBubble(messages, fallback, 'assistant');
         if (window.RK_Eval && typeof window.RK_Eval.setLastSample === 'function') {
           window.RK_Eval.setLastSample({ mode: 'translate_text_fallback', input: t, output: fallback });
