@@ -335,7 +335,8 @@
           d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         const actionTd = document.createElement('td');
-        actionTd.className = 'px-2 sm:px-3 py-2 align-top text-right';
+        actionTd.className = 'admin-only px-2 sm:px-3 py-2 align-top text-right';
+        if (!isAdmin()) actionTd.classList.add('hidden');
 
         if (isAdmin()) {
           const delBtn = document.createElement('button');
