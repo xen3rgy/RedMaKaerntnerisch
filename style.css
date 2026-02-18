@@ -1255,3 +1255,7 @@ code {
   .pill { font-size: 13px; }
   .btn { font-size: 16px; padding: 12px 16px; }
 }
+
+
+/* Admin-only visibility guard */
+html:not(.is-admin) .admin-only{display:none !important;}

@@ -334,61 +334,63 @@
           d.toLocaleDateString() + ' ' +
           d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const actionTd = document.createElement('td');
-        actionTd.className = 'px-2 sm:px-3 py-2 align-top text-right';
-
         if (isAdmin()) {
-          const delBtn = document.createElement('button');
-          delBtn.type = 'button';
-          delBtn.className = 'btn btn-ghost btn-xs text-[11px] text-red-600 dark:text-red-400';
-          delBtn.textContent = 'Löschen';
-
-          delBtn.addEventListener('click', async function () {
-            if (!isAdmin()) {
-              alert('Nur Admin darf Einträge löschen.');
-              return;
-            }
-            if (!confirm('Diesen Eintrag wirklich löschen?')) return;
-
-            if (!remoteEnabled) {
-              entries = entries.filter(e => e.id !== entry.id);
-              saveLocalEntries(entries);
-              render();
-              return;
-            }
-
-            try {
-              // Admin token is required server-side. Store it only in your browser.
-              let token = localStorage.getItem(ADMIN_TOKEN_KEY) || '';
-              if (!token) {
-                token = prompt('Admin-Token (für Löschen):');
-                if (token) localStorage.setItem(ADMIN_TOKEN_KEY, token);
-              }
-              if (!token) {
-                notify('Kein Admin-Token gesetzt.', 'error');
+          const actionTd = document.createElement('td');
+          actionTd.className = 'px-2 sm:px-3 py-2 align-top text-right';
+  
+          if (isAdmin()) {
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'btn btn-ghost btn-xs text-[11px] text-red-600 dark:text-red-400';
+            delBtn.textContent = 'Löschen';
+  
+            delBtn.addEventListener('click', async function () {
+              if (!isAdmin()) {
+                alert('Nur Admin darf Einträge löschen.');
                 return;
               }
-
-              await apiDelete(entry.id, token);
-              entries = entries.filter(e => e.id !== entry.id);
-              render();
-              updateCounter();
-              notify('Eintrag gelöscht.', 'success');
-            } catch (err) {
-              console.error('[corpus] delete failed', err);
-              notify('Löschen fehlgeschlagen: ' + (err?.message || err), 'error');
-            }
-          });
-
-          actionTd.appendChild(delBtn);
+              if (!confirm('Diesen Eintrag wirklich löschen?')) return;
+  
+              if (!remoteEnabled) {
+                entries = entries.filter(e => e.id !== entry.id);
+                saveLocalEntries(entries);
+                render();
+                return;
+              }
+  
+              try {
+                // Admin token is required server-side. Store it only in your browser.
+                let token = localStorage.getItem(ADMIN_TOKEN_KEY) || '';
+                if (!token) {
+                  token = prompt('Admin-Token (für Löschen):');
+                  if (token) localStorage.setItem(ADMIN_TOKEN_KEY, token);
+                }
+                if (!token) {
+                  notify('Kein Admin-Token gesetzt.', 'error');
+                  return;
+                }
+  
+                await apiDelete(entry.id, token);
+                entries = entries.filter(e => e.id !== entry.id);
+                render();
+                updateCounter();
+                notify('Eintrag gelöscht.', 'success');
+              } catch (err) {
+                console.error('[corpus] delete failed', err);
+                notify('Löschen fehlgeschlagen: ' + (err?.message || err), 'error');
+              }
+            });
+  
+            actionTd.appendChild(delBtn);
+          }
+  
+          tr.appendChild(hdTd);
+          tr.appendChild(dialectTd);
+          tr.appendChild(likeTd);
+          tr.appendChild(srcTd);
+          tr.appendChild(metaTd);
+          tr.appendChild(actionTd);
         }
-
-        tr.appendChild(hdTd);
-        tr.appendChild(dialectTd);
-        tr.appendChild(likeTd);
-        tr.appendChild(srcTd);
-        tr.appendChild(metaTd);
-        tr.appendChild(actionTd);
 
         listBody.appendChild(tr);
       });
