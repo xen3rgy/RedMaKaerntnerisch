@@ -2,8 +2,19 @@
 <html lang="de" class="h-full scroll-smooth">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Red ma Kärntnerisch! – AI-Powered Dialect Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>
+  // Apply theme before first paint to avoid white flash on mobile reload.
+  (function () {
+    try {
+      var stored = localStorage.getItem('rk-dark');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var useDark = stored ? (stored === '1') : prefersDark;
+      document.documentElement.classList.toggle('dark', !!useDark);
+    } catch (e) {}
+  })();
+</script>
+<title>Red ma Kärntnerisch! – AI-Powered Dialect Chat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
