@@ -33,6 +33,10 @@ function safeSlice(value, maxLen) {
   return String(value).slice(0, maxLen);
 }
 
+function isUuid(v) {
+  return typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+}
+
 async function supabaseFetch(path, { method = 'GET', body, headers = {} } = {}) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
@@ -77,7 +81,8 @@ module.exports = async (req, res) => {
       const output_text = safeSlice(body.output_text, 4000);
 
       const row = {
-        ...(body.id ? { id: String(body.id) } : {}),
+        // Only accept UUID ids (table column is uuid). Otherwise let DB generate one.
+        ...(isUuid(String(body.id || '')) ? { id: String(body.id) } : {}),
         created_at: body.created_at ? String(body.created_at) : undefined,
         mode,
         input_text,

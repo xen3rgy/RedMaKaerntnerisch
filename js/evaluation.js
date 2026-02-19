@@ -23,7 +23,16 @@
   }
 
   function uid() {
+    // Use a real UUID so Supabase can store it as uuid primary key.
+    // Fallback keeps local-only IDs; the server will ignore non-UUID ids.
+    try {
+      if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    } catch (_) {}
     return 'eval_' + Math.random().toString(36).slice(2) + '_' + Date.now().toString(36);
+  }
+
+  function isUuid(v) {
+    return typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
   }
 
   function safeToast(msg, tone) {
@@ -47,22 +56,25 @@
   async function cloudInsert(localRow) {
     // Best-effort: if /api isn't available, we just keep local storage.
     try {
+      const payload = {
+        // Only send id if it's a UUID (table column is uuid).
+        ...(isUuid(localRow.id) ? { id: localRow.id } : {}),
+        created_at: localRow.createdAt,
+        mode: localRow.mode,
+        input_text: localRow.input,
+        output_text: localRow.output,
+        dialect_authenticity: localRow.authenticity ? Number(localRow.authenticity) : null,
+        clarity: localRow.clarity ? Number(localRow.clarity) : null,
+        ux: localRow.usability ? Number(localRow.usability) : null,
+        speed: localRow.speed ? Number(localRow.speed) : null,
+        category: localRow.tag || null,
+        note: localRow.note || null,
+      };
+
       const res = await fetch(CLOUD_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: localRow.id,
-          created_at: localRow.createdAt,
-          mode: localRow.mode,
-          input_text: localRow.input,
-          output_text: localRow.output,
-          dialect_authenticity: localRow.authenticity ? Number(localRow.authenticity) : null,
-          clarity: localRow.clarity ? Number(localRow.clarity) : null,
-          ux: localRow.usability ? Number(localRow.usability) : null,
-          speed: localRow.speed ? Number(localRow.speed) : null,
-          category: localRow.tag || null,
-          note: localRow.note || null,
-        }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const t = await res.text().catch(() => '');
