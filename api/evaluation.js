@@ -28,6 +28,11 @@ function clampInt(v, min, max) {
   return Math.max(min, Math.min(max, i));
 }
 
+function safeSlice(value, maxLen) {
+  if (value == null) return null;
+  return String(value).slice(0, maxLen);
+}
+
 async function supabaseFetch(path, { method = 'GET', body, headers = {} } = {}) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
@@ -68,8 +73,8 @@ module.exports = async (req, res) => {
       const mode = String(body.mode || '').trim();
       if (!mode) return json(res, 400, { error: 'mode is required' });
 
-      const input_text = (body.input_text == null ? null : String(body.input_text)).slice(0, 4000);
-      const output_text = (body.output_text == null ? null : String(body.output_text)).slice(0, 4000);
+      const input_text = safeSlice(body.input_text, 4000);
+      const output_text = safeSlice(body.output_text, 4000);
 
       const row = {
         ...(body.id ? { id: String(body.id) } : {}),
@@ -81,8 +86,8 @@ module.exports = async (req, res) => {
         clarity: clampInt(body.clarity, 1, 5),
         ux: clampInt(body.ux, 1, 5),
         speed: clampInt(body.speed, 1, 5),
-        category: (body.category == null ? null : String(body.category)).slice(0, 200),
-        note: (body.note == null ? null : String(body.note)).slice(0, 2000),
+        category: safeSlice(body.category, 200),
+        note: safeSlice(body.note, 2000),
       };
 
       Object.keys(row).forEach((k) => row[k] === undefined && delete row[k]);
