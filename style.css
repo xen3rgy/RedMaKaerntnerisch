@@ -316,6 +316,13 @@ body::after {
   display: block !important;
 }
 
+/* Admin-only UI elements must not be visible in normal mode.
+   We don't rely only on Tailwind's .hidden because table cells can become visible
+   if classes are changed/overridden. In admin mode we revert to the element's
+   natural display type (th/td -> table-cell, etc.). */
+.admin-only { display: none !important; }
+html.is-admin .admin-only { display: revert !important; }
+
 html.is-admin .eval-admin{
   flex-basis: 440px;
   max-width: 440px;
