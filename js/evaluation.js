@@ -8,6 +8,7 @@
 
 (() => {
   const STORAGE_KEY = 'rk-eval-log';
+  const CLOUD_ENDPOINT = '/api/evaluation';
 
   function isAdmin() {
     try {
@@ -41,6 +42,85 @@
       console.warn('Eval load failed:', e);
       return [];
     }
+  }
+
+  async function cloudInsert(localRow) {
+    // Best-effort: if /api isn't available, we just keep local storage.
+    try {
+      const res = await fetch(CLOUD_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: localRow.id,
+          created_at: localRow.createdAt,
+          mode: localRow.mode,
+          input_text: localRow.input,
+          output_text: localRow.output,
+          dialect_authenticity: localRow.authenticity ? Number(localRow.authenticity) : null,
+          clarity: localRow.clarity ? Number(localRow.clarity) : null,
+          ux: localRow.usability ? Number(localRow.usability) : null,
+          speed: localRow.speed ? Number(localRow.speed) : null,
+          category: localRow.tag || null,
+          note: localRow.note || null,
+        }),
+      });
+      if (!res.ok) {
+        const t = await res.text().catch(() => '');
+        console.warn('[Eval] Cloud insert failed:', res.status, t);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      console.warn('[Eval] Cloud insert error:', e);
+      return false;
+    }
+  }
+
+  async function cloudFetchAll() {
+    try {
+      const res = await fetch(CLOUD_ENDPOINT, { method: 'GET' });
+      if (!res.ok) return [];
+      const rows = await res.json();
+      if (!Array.isArray(rows)) return [];
+      return rows
+        .map((r) => ({
+          id: r.id,
+          createdAt: r.created_at,
+          mode: r.mode,
+          authenticity: r.dialect_authenticity ?? '',
+          clarity: r.clarity ?? '',
+          usability: r.ux ?? '',
+          speed: r.speed ?? '',
+          tag: r.category ?? '',
+          input: r.input_text ?? '',
+          output: r.output_text ?? '',
+          note: r.note ?? '',
+        }))
+        .filter((x) => x.id);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function mergeRows(localRows, cloudRows) {
+    const byId = new Map();
+    (Array.isArray(localRows) ? localRows : []).forEach((r) => r?.id && byId.set(r.id, r));
+    (Array.isArray(cloudRows) ? cloudRows : []).forEach((r) => r?.id && byId.set(r.id, r));
+    // keep same ordering logic as existing UI (oldest -> newest)
+    return Array.from(byId.values()).sort((a, b) => {
+      const da = new Date(a.createdAt || 0).getTime();
+      const db = new Date(b.createdAt || 0).getTime();
+      return da - db;
+    });
+  }
+
+  async function syncFromCloud() {
+    const cloud = await cloudFetchAll();
+    if (!cloud.length) return false;
+    const local = load();
+    const merged = mergeRows(local, cloud);
+    save(merged);
+    return true;
   }
 
   function save(arr) {
@@ -269,6 +349,15 @@
         rows.push(row);
         save(rows);
 
+        // Push to Supabase (if backend exists). Do not block UI.
+        cloudInsert(row).then((ok) => {
+          if (!ok) return;
+          // Merge server state back into local so admin view is consistent across devices.
+          syncFromCloud().then((changed) => {
+            if (changed) updateUi();
+          });
+        });
+
         // reset only ratings + tag + note (keep sample text for multiple raters)
         const aEl = document.getElementById('evalAuthenticity');
         const cEl = document.getElementById('evalClarity');
@@ -289,6 +378,10 @@
     }
 
     updateUi();
+    // Merge cloud entries on load (no-op if /api isn't available)
+    syncFromCloud().then((changed) => {
+      if (changed) updateUi();
+    });
   }
 
   document.addEventListener('DOMContentLoaded', onReady);
