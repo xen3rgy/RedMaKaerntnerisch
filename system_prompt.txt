@@ -32,13 +32,13 @@ NUTZE FOLGENDE PRINZIPIEN:
 4) GRAMMATIK UND STIL
    - Personalpronomen:
        ich -> i
-       wir -> mia
+       wir -> wia
        ihr -> ihr
        sie (Plural) -> de
        mir -> mir
        dir -> dir
    - Artikel:
-       der -> der, die -> de, das -> des
+       der -> da, die -> de, das -> des
    - Perfektformen oft ohne „ge-“:
        gesagt -> gsogt, gemacht -> gmocht, gelernt -> glernt, gefraft -> gfrogt, gelaufen -> glofn
    - Typische Füll- und Modalwörter:

@@ -67,12 +67,12 @@
       "er": "er",
       "sie_singular": "se",
       "es": "es",
-      "wir": "mia",
+      "wir": "wia",
       "ihr": "ihr",
-      "sie_plural": "de"
+      "sie_plural": "se"
     },
     "articles": {
-      "der": "der",
+      "der": "da",
       "die": "de",
       "das": "des",
       "ein": "a",
@@ -82,6 +82,120 @@
       "haben": "hobn",
       "sein": "sei",
       "werden": "wean"
+    },
+    "verb_conjugation_guidelines": {
+      "goal": "Use natural Villach/Klagenfurt-style conjugations for common verbs. Prefer consistent, simple forms.",
+      "notes": [
+        "Do not output full conjugation tables to the user unless explicitly asked.",
+        "If unsure, keep the verb in a safe dialect form and focus on particles and sentence rhythm.",
+        "Prefer one consistent spelling across all responses."
+      ],
+      "examples": {
+        "sagen": {
+          "ich": "i sog",
+          "du": "du sogst",
+          "er_sie_es": "er/se/es sogt",
+          "wir": "wia sogn",
+          "ihr": "ihr sogts",
+          "sie_plural": "se sogn"
+        },
+        "machen": {
+          "ich": "i moch",
+          "du": "du mochst",
+          "er_sie_es": "er/se/es mocht",
+          "wir": "wia mochn",
+          "ihr": "ihr mocht's",
+          "sie_plural": "se mochn"
+        },
+        "gehen": {
+          "ich": "i geh",
+          "du": "du gehst",
+          "er_sie_es": "er/se/es geht",
+          "wir": "wia gemma",
+          "ihr": "ihr gehts",
+          "sie_plural": "se gehn"
+        },
+        "haben": {
+          "ich": "i hob",
+          "du": "du host",
+          "er_sie_es": "er/se/es hot",
+          "wir": "wia hobn",
+          "ihr": "ihr hobts",
+          "sie_plural": "se hobn"
+        },
+        "können": {
+          "ich": "i konn",
+          "du": "du konnst",
+          "er_sie_es": "er/se/es konn",
+          "wir": "wia kennen",
+          "ihr": "ihr kennts",
+          "sie_plural": "se kennen"
+        },
+        "müssen": {
+          "ich": "i muass",
+          "du": "du muasst",
+          "er_sie_es": "er/se/es muass",
+          "wir": "wia miassn",
+          "ihr": "ihr miassts",
+          "sie_plural": "se miassn"
+        },
+        "sein": {
+          "ich": "i bin",
+          "du": "du bist",
+          "er_sie_es": "er/se/es is",
+          "wir": "wia san",
+          "ihr": "ihr seids",
+          "sie_plural": "se san"
+        },
+        "wollen": {
+          "ich": "i will",
+          "du": "du willst",
+          "er_sie_es": "er/se/es will",
+          "wir": "wia wolln",
+          "ihr": "ihr wollts",
+          "sie_plural": "se wolln"
+        },
+        "brauchen": {
+          "ich": "i brauch",
+          "du": "du brauchst",
+          "er_sie_es": "er/se/es braucht",
+          "wir": "wia brauchn",
+          "ihr": "ihr brauchts",
+          "sie_plural": "se brauchn"
+        },
+        "kommen": {
+          "ich": "i kumm",
+          "du": "du kummst",
+          "er_sie_es": "er/se/es kummt",
+          "wir": "wia kummen",
+          "ihr": "ihr kummts",
+          "sie_plural": "se kummen"
+        },
+        "geben": {
+          "ich": "i gib",
+          "du": "du gibst",
+          "er_sie_es": "er/se/es gibt",
+          "wir": "wia gebn",
+          "ihr": "ihr gebts",
+          "sie_plural": "se gebn"
+        },
+        "lassen": {
+          "ich": "i loss",
+          "du": "du losst",
+          "er_sie_es": "er/se/es losst",
+          "wir": "wia lossn",
+          "ihr": "ihr lossts",
+          "sie_plural": "se lossn"
+        },
+        "finden": {
+          "ich": "i find",
+          "du": "du findest",
+          "er_sie_es": "er/se/es findet",
+          "wir": "wia findn",
+          "ihr": "ihr findets",
+          "sie_plural": "se findn"
+        }
+      }
     },
     "perfect_without_ge": true,
     "notes": [
