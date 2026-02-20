@@ -469,7 +469,10 @@ async function translateHDToDialekt(text) {
   }
 
   // 2) Post-enforce lexicon on model output
-  const post = window.RK_Lexicon ? window.RK_Lexicon.apply(raw) : raw;
+  const post = window.RK_Lexicon
+  ? (window.RK_Lexicon.applyOut ? window.RK_Lexicon.applyOut(raw) : window.RK_Lexicon.apply(raw))
+  : raw;
+
 
   return post;
 }
@@ -505,7 +508,10 @@ async function chatWithDialect(history) {
   const msgs = [{ role: 'system', content: sysPrompt }, ...history];
   const raw = await callLLM(msgs, { purpose: 'chat' });
 
-  const post = window.RK_Lexicon ? window.RK_Lexicon.apply(raw) : raw;
+  const post = window.RK_Lexicon
+  ? (window.RK_Lexicon.applyOut ? window.RK_Lexicon.applyOut(raw) : window.RK_Lexicon.apply(raw))
+  : raw;
+
   return post;
 }
 
