@@ -120,7 +120,7 @@ const elevenVoiceInput = document.getElementById("elevenVoiceInput");
 
 const elevenConfig = {
   key: localStorage.getItem("rk-eleven-key") || "",
-  voice: localStorage.getItem("rk-eleven-voice") || "EXAVITQu4vr4xnSDxMaL",
+  voice: localStorage.getItem("rk-eleven-voice") || "TX3LPaxmHKxFdv7VOQHJ",
 };
 
     const openaiSttConfig = {
@@ -178,7 +178,7 @@ const elevenConfig = {
       openaiSttConfig.key = (openaiKeyInput?.value || '').trim();
 
         elevenConfig.key = (elevenKeyInput?.value || "").trim();
-  elevenConfig.voice = (elevenVoiceInput?.value || "").trim() || "EXAVITQu4vr4xnSDxMaL";
+  elevenConfig.voice = (elevenVoiceInput?.value || "").trim() || "TX3LPaxmHKxFdv7VOQHJ";
 
       if (openaiSttConfig.key) {
         localStorage.setItem('rk-openai-key', openaiSttConfig.key);
@@ -205,7 +205,7 @@ const elevenConfig = {
       openaiSttConfig.key = '';
 
       elevenConfig.key = "";
-  elevenConfig.voice = "EXAVITQu4vr4xnSDxMaL";
+  elevenConfig.voice = "TX3LPaxmHKxFdv7VOQHJ";
 
       localStorage.removeItem('rk-api-key');
       localStorage.removeItem('rk-api-url');

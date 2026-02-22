@@ -433,7 +433,7 @@ if (ttsBtn) {
 
       // Public deployment: TTS runs via the server-side proxy (/api/tts).
       // No API keys in the browser.
-      const voiceId = localStorage.getItem("rk-eleven-voice") || "EXAVITQu4vr4xnSDxMaL";
+      const voiceId = localStorage.getItem("rk-eleven-voice") || "TX3LPaxmHKxFdv7VOQHJ";
 
       notify("TTS wird generiert...");
 
