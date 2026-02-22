@@ -287,6 +287,9 @@ async function loadDialectResources() {
   DIALECT_EXAMPLES = await fetch("example_sentences.txt").then(r => r.text());
 
   window.DIALECT_LEXICON = DIALECT_LEXICON;
+  // Expose rules for deterministic post-processing (grammar enforcement).
+  // This allows lexicon_enforce.js to enforce canonical conjugations.
+  window.DIALECT_RULES = DIALECT_RULES;
 }
 const dialectReady = loadDialectResources();
 

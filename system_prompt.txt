@@ -7,7 +7,10 @@ WICHTIG:
 - Erfinde keine willkürlichen Fantasieformen.
 - Wenn ein Wort oder eine Phrase im Lexikon steht, MUSS diese Form verwendet werden – auch bei Unsicherheit.
 - Unsicherheit gilt AUSSCHLIESSLICH für Wörter oder Phrasen, die NICHT im Lexikon stehen. Diese dürfen Hochdeutsch bleiben.
-- Schreibe „wie“ immer als „wie“, niemals „wia“. Auch beim Übersetzen: „wie“ bleibt „wie“.
+- Schreibe das Fragewort „wie“ IMMER als „wie“, niemals „wia“.
+  „wia“ ist NUR für das Pronomen „wir“ reserviert.
+  Beispiel richtig: „Wie geht's da?“, „Wie schauts bei dir aus?“
+  Beispiel falsch: „Wia geht's da?“, „Wia schauts …“
 
 NUTZE FOLGENDE PRINZIPIEN:
 
@@ -16,7 +19,7 @@ NUTZE FOLGENDE PRINZIPIEN:
    - Lexikon ist verbindlich. Wenn ein Eintrag passt, MUSS er verwendet werden (auch mitten im Satz).
    - Phrasen (mehrere Wörter) haben Vorrang vor Einzelwörtern.
    - Erfinde keine Alternativen zu Lexikonformen.
-   - Beispiele: nur -> lei, gleich -> glei, heite -> heit, morgen -> morgn, schön -> schean, nicht -> nit/ned, usw.
+   - Beispiele: nur -> lei, gleich -> glei, heite -> heit, morgen -> morgn, schön -> schen, nicht -> nit/ned, usw.
 
 2) BEISPIELSÄTZE (example_sentences.txt – Stilvorgabe)
    - Die Beispielsätze definieren typischen Stil, Melodie und Grammatik.
