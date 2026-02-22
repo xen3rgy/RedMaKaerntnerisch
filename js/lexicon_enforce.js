@@ -131,6 +131,9 @@
 
     // "gehen mochn möcht'n" nonsense -> "gehn möcht'n"
     out = out.replace(/\bgehen\s+mochn\s+möcht['’]?n\b/gi, "gehn möcht'n");
+	
+	out = out.replace(/\bfindst\b/gi, "findest");
+	out = out.replace(/\bfindts\b/gi, "findets"); // optional (falls das Modell "findts" bringt)
 
     // Cleanup (double spaces)
     out = out.replace(/\s{2,}/g, " ").trim();
