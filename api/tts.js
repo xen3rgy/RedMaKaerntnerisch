@@ -1,3 +1,14 @@
+/**
+ * Serverless proxy for ElevenLabs TTS (audio generation).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Serverless proxy for ElevenLabs TTS (audio generation).
+// ------------------------------------------------------------
+
 // Vercel Serverless Function: /api/tts
 // Proxy to ElevenLabs TTS (keeps API key server-side)
 

@@ -1,3 +1,9 @@
+-- Red ma Kärntnerisch! – Supabase schema
+-- NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+-- The project team reviewed, tested, and integrated the final result.
+--
+-- Tables: corpus_entries (community examples)
+
 -- Community corpus table for "Red ma Kärntnerisch!"
 
 create table if not exists public.corpus_entries (

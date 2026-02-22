@@ -1,3 +1,14 @@
+/**
+ * Evaluation/feedback UI (submit + render) and export helpers for admin.
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Evaluation/feedback UI (submit + render) and export helpers for admin.
+// ------------------------------------------------------------
+
 /*
   Evaluation helper for the bachelor project.
   Stores structured feedback locally (localStorage) and allows export.

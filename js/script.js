@@ -1,3 +1,14 @@
+/**
+ * Main frontend controller (tabs, chat, translator, settings, API calls).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Main frontend controller (tabs, chat, translator, settings, API calls).
+// ------------------------------------------------------------
+
     // --- Simple rules Hochdeutsch -> Kärntnerisch (Mock) ---
     function toKaerntnerisch(text) {
       if (!text) return '';

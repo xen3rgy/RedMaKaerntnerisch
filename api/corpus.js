@@ -1,3 +1,14 @@
+/**
+ * Serverless API for Supabase corpus entries (read/write/like).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Serverless API for Supabase corpus entries (read/write/like).
+// ------------------------------------------------------------
+
 // Vercel Serverless Function: /api/corpus
 // Persists the community corpus in Supabase (server-side only).
 

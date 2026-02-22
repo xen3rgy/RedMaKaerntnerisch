@@ -1,3 +1,14 @@
+/**
+ * Audio pipeline in the browser (recording, STT via Whisper proxy, TTS via ElevenLabs proxy).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Audio pipeline in the browser (recording, STT via Whisper proxy, TTS via ElevenLabs proxy).
+// ------------------------------------------------------------
+
 // ====================================================
 // AUDIO MODULE (Real Recording + Whisper STT + TTS)
 // mit Geräteauswahl für Ein- und Ausgabe

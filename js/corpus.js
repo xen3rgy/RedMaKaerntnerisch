@@ -1,3 +1,14 @@
+/**
+ * Community corpus UI (browse/add/like entries) and admin utilities.
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Community corpus UI (browse/add/like entries) and admin utilities.
+// ------------------------------------------------------------
+
 // --- Community corpus (Korpus & Wissensbasis) ---
 // Public deployment (Variante B):
 // - Entries are stored server-side via /api/corpus (Supabase behind the scenes)

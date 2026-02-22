@@ -1,3 +1,14 @@
+/**
+ * Serverless proxy for OpenAI Whisper STT (audio transcription).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Serverless proxy for OpenAI Whisper STT (audio transcription).
+// ------------------------------------------------------------
+
 // Vercel Serverless Function: /api/stt
 // Proxy to OpenAI Whisper (keeps API key server-side)
 

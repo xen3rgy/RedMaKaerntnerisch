@@ -1,3 +1,14 @@
+/**
+ * Client-side admin mode toggle (UI-only, not real security).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Client-side admin mode toggle (UI-only, not real security).
+// ------------------------------------------------------------
+
 /* Admin mode (client-side)
  * - Unlock via hidden key combo (Ctrl + Alt + A)
  * - Then password prompt

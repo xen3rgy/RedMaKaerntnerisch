@@ -1,3 +1,11 @@
+/*
+  Red ma Kärntnerisch! – Stylesheet
+  NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+  The project team reviewed, tested, and integrated the final result.
+*/
+
+/* Sections: design tokens, base styles, components, layout helpers, dark mode */
+
 :root {
   /* Kärntner Landesfarben und Alpine Palette */
   --kaernten-gold: #D4AF37;

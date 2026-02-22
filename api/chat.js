@@ -1,3 +1,14 @@
+/**
+ * Serverless proxy for OpenAI chat completions (keeps API key server-side).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Serverless proxy for OpenAI chat completions (keeps API key server-side).
+// ------------------------------------------------------------
+
 // Vercel Serverless Function: /api/chat
 // Proxy to OpenAI Chat Completions (keeps API key server-side)
 

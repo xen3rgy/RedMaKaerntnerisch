@@ -1,3 +1,14 @@
+/**
+ * Theme toggle + persistence (light/dark) across reloads.
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Theme toggle + persistence (light/dark) across reloads.
+// ------------------------------------------------------------
+
 // Dark mode toggle with persistence
 (function () {
   const root = document.documentElement;

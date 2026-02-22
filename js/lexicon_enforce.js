@@ -1,3 +1,14 @@
+/**
+ * Deterministic dialect normalization (lexicon enforcement + output cleanup).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Deterministic dialect normalization (lexicon enforcement + output cleanup).
+// ------------------------------------------------------------
+
 // lexicon_enforce.js
 // Enforces dialect lexicon deterministically and normalizes common model glitches.
 // Comments intentionally in English.
@@ -120,9 +131,6 @@
 
     // "gehen mochn möcht'n" nonsense -> "gehn möcht'n"
     out = out.replace(/\bgehen\s+mochn\s+möcht['’]?n\b/gi, "gehn möcht'n");
-
-    out = out.replace(/\bfindst\b/gi, "findest");
-    out = out.replace(/\bfindts\b/gi, "findets"); // optional (falls das Modell "findts" bringt)
 
     // Cleanup (double spaces)
     out = out.replace(/\s{2,}/g, " ").trim();

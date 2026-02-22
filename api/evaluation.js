@@ -1,3 +1,14 @@
+/**
+ * Serverless API for Supabase evaluation entries (read/write).
+ *
+ * NOTE: Parts of this project were developed with the support of AI tools (e.g., ChatGPT).
+ * The project team reviewed, tested, and integrated the final code and content.
+ */
+
+// ------------------------------------------------------------
+// Serverless API for Supabase evaluation entries (read/write).
+// ------------------------------------------------------------
+
 // Vercel Serverless Function: /api/evaluation
 // Persists evaluation/feedback entries in Supabase (server-side only).
 
