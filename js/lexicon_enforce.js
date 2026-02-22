@@ -242,6 +242,8 @@
     out = replaceWord(out, "der", "da");
     out = replaceWord(out, "die", "de");
     out = replaceWord(out, "das", "des");
+	// Adjective inflection: "a schen Tog" -> "a schena Tog"
+	out = out.replace(/\b(a)\s+schen\s+(tog)\b/gi, "a schena Tog");
 
     // Avoid pronoun confusion: prefer "se" for plural pronoun
     // (Article "de" stays for "die")
