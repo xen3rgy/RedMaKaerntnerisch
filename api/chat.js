@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
     }
 
     const payload = {
-      model: model || 'gpt-4o-mini',
+      model: model || 'gpt-4o',
       messages,
       temperature: typeof temperature === 'number' && !Number.isNaN(temperature) ? temperature : 0.3,
     };

@@ -71,8 +71,8 @@
     const apiConfig = {
       key: localStorage.getItem('rk-api-key') || '',
       url: localStorage.getItem('rk-api-url') || '',
-      model: localStorage.getItem('rk-api-model') || 'gpt-4o-mini',
-      temperature: parseFloat(localStorage.getItem('rk-api-temp') || '0.3'),
+      model: localStorage.getItem('rk-api-model') || 'gpt-4o',
+      temperature: parseFloat(localStorage.getItem('rk-api-temp') || '0.15'),
     };
 
     const settingsModal = document.getElementById('settingsModal');
@@ -120,7 +120,7 @@ const elevenConfig = {
       if (apiKeyInput) apiKeyInput.value = apiConfig.key;
       if (apiUrlInput) apiUrlInput.value = apiConfig.url;
       if (apiModelInput) apiModelInput.value = apiConfig.model;
-      if (apiTempInput) apiTempInput.value = apiConfig.temperature ?? 0.3;
+      if (apiTempInput) apiTempInput.value = apiConfig.temperature ?? 0.15;
       if (openaiKeyInput) openaiKeyInput.value = openaiSttConfig.key;
 
       if (elevenKeyInput) elevenKeyInput.value = elevenConfig.key;
@@ -160,9 +160,9 @@ const elevenConfig = {
       evt.preventDefault();
       apiConfig.key = apiKeyInput.value.trim();
       apiConfig.url = apiUrlInput.value.trim();
-      apiConfig.model = apiModelInput.value.trim() || 'gpt-4o-mini';
-      apiConfig.temperature = parseFloat(apiTempInput.value || '0.3');
-      if (Number.isNaN(apiConfig.temperature)) apiConfig.temperature = 0.3;
+      apiConfig.model = apiModelInput.value.trim() || 'gpt-4o';
+      apiConfig.temperature = parseFloat(apiTempInput.value || '0.15');
+      if (Number.isNaN(apiConfig.temperature)) apiConfig.temperature = 0.15;
 
       openaiSttConfig.key = (openaiKeyInput?.value || '').trim();
 
@@ -189,8 +189,8 @@ const elevenConfig = {
     settingsReset?.addEventListener('click', () => {
       apiConfig.key = '';
       apiConfig.url = '';
-      apiConfig.model = 'gpt-4o-mini';
-      apiConfig.temperature = 0.3;
+      apiConfig.model = 'gpt-4o';
+      apiConfig.temperature = 0.15;
       openaiSttConfig.key = '';
 
       elevenConfig.key = "";
@@ -212,10 +212,10 @@ const elevenConfig = {
 
     async function callLLM(messages, { purpose } = {}) {
       const payload = {
-        model: apiConfig.model || 'gpt-4o-mini',
+        model: apiConfig.model || 'gpt-4o',
         messages,
         temperature: typeof apiConfig.temperature === 'number' && !Number.isNaN(apiConfig.temperature)
-          ? apiConfig.temperature : 0.3,
+          ? apiConfig.temperature : 0.15,
       };
 
       // Option A (Admin/Dev): direct call with a user-provided key.
@@ -353,6 +353,34 @@ function buildRulesText() {
   if (Object.keys(aux).length) {
     lines.push('Hilfsverben (Tendenzen):');
     Object.entries(aux).forEach(([k, v]) => lines.push('- ' + k + ' → ' + v));
+  }
+
+  // Verb conjugation guidelines (important for consistent grammar)
+  const vcg = gr.verb_conjugation_guidelines || {};
+  if (vcg && typeof vcg === 'object') {
+    lines.push('Verb-Konjugation (bevorzugte Formen; konsistent verwenden):');
+    if (vcg.goal) lines.push('- Ziel: ' + String(vcg.goal));
+    if (Array.isArray(vcg.notes) && vcg.notes.length) {
+      vcg.notes.slice(0, 3).forEach((n) => lines.push('- ' + String(n)));
+    }
+
+    const ex = vcg.examples || {};
+    const pick = ['können', 'haben', 'sein', 'gehen', 'lassen', 'finden', 'machen', 'sagen'];
+    pick.forEach((verb) => {
+      const f = ex[verb];
+      if (!f) return;
+      lines.push(
+        `${verb}: ich="${f.ich}", du="${f.du}", er/sie/es="${f.er_sie_es}", wir="${f.wir}", ihr="${f.ihr}", sie(pl)="${f.sie_plural}"`
+      );
+    });
+
+    // Style guardrails that are easy to mess up
+    lines.push('Schreibstil: Kein Standarddeutsch "kann" → schreibe "konn".');
+    lines.push('Schreibstil: Keine Apostrophe für ausgelassene Buchstaben (z.B. "Vorhersagn", nicht "Vorhersag\'n").');
+  }
+
+  if (gr.perfect_without_ge === true) {
+    lines.push('Perfekt: Bevorzuge Formen ohne "ge-" (z.B. "I hob gsegn", nicht "I hob gesehn").');
   }
   if (Array.isArray(gr.notes) && gr.notes.length) {
     lines.push('Grammatik-Notizen:');

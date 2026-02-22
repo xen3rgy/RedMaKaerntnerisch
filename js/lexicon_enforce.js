@@ -99,6 +99,17 @@
     // "hab'n" style
     out = out.replace(/\bhab(['’]?n)\b/gi, "hobn");
 
+
+    // Normalize "können" conjugations (model often slips into Standard German)
+    out = out.replace(/\bkann(['’]?s)\b/gi, "konn$1");
+    out = out.replace(/\bkannst\b/gi, "konnst");
+    out = out.replace(/\bkann\b/gi, "konn");
+
+    // Prefer dialect pronoun "i" over "ich"
+    out = replaceWord(out, "ich", "i");
+
+    // Avoid apostrophes for dropped letters at word end: Vorhersag'n -> Vorhersagn
+    out = out.replace(/([A-Za-zÄÖÜäöüß])['’]n\b/g, "$1n");
     // Specific high-impact phrasing fixes you complained about
     out = out.replace(/\bzum Sitzen\b/gi, "zum Sitzn");
     out = out.replace(/\bgenieße\b/gi, "gnieß");
@@ -109,6 +120,9 @@
 
     // "gehen mochn möcht'n" nonsense -> "gehn möcht'n"
     out = out.replace(/\bgehen\s+mochn\s+möcht['’]?n\b/gi, "gehn möcht'n");
+
+    out = out.replace(/\bfindst\b/gi, "findest");
+    out = out.replace(/\bfindts\b/gi, "findets"); // optional (falls das Modell "findts" bringt)
 
     // Cleanup (double spaces)
     out = out.replace(/\s{2,}/g, " ").trim();

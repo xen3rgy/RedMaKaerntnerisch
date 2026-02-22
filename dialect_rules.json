@@ -123,6 +123,14 @@
           "ihr": "ihr hobts",
           "sie_plural": "se hobn"
         },
+        "glauben": {
+          "ich": "i glab",
+          "du": "du glabst",
+          "er_sie_es": "er/se/es glabt",
+          "wir": "wia glabn",
+          "ihr": "ihr glabts",
+          "sie_plural": "se glabn"
+        },
         "können": {
           "ich": "i konn",
           "du": "du konnst",
