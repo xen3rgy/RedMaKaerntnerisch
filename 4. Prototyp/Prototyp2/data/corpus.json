@@ -1,0 +1,52 @@
+[
+  {
+    "hoch": "Guten Tag",
+    "dialekt": "Grias di",
+    "desc": "Informelle Begrüßung"
+  },
+  {
+    "hoch": "Wie geht es dir?",
+    "dialekt": "Wia geht's da?",
+    "desc": "Alltag"
+  },
+  {
+    "hoch": "Ich habe das nicht gewusst",
+    "dialekt": "I hob des ned gwusst",
+    "desc": "Aussage"
+  },
+  {
+    "hoch": "Wir gehen später einkaufen",
+    "dialekt": "Mia gemma späta eikaffa",
+    "desc": "Alltag, Verb ‚gehen‘ → ‚gemma‘"
+  },
+  {
+    "hoch": "Kannst du mir helfen?",
+    "dialekt": "Kanst ma bitte helfn?",
+    "desc": "Bitteformel"
+  },
+  {
+    "hoch": "Ich komme aus Villach",
+    "dialekt": "I kimm aus Villach",
+    "desc": "Selbstauskunft"
+  },
+  {
+    "hoch": "Guten Morgen zusammen",
+    "dialekt": "Grias enk am Morgn",
+    "desc": "Begrüßung in der Gruppe"
+  },
+  {
+    "hoch": "Das ist sehr gut",
+    "dialekt": "Des is leiwaund",
+    "desc": "Bewertung"
+  },
+  {
+    "hoch": "Ich habe Hunger",
+    "dialekt": "I hob an Hunger",
+    "desc": "Alltag"
+  },
+  {
+    "hoch": "Ich verstehe dich nicht",
+    "dialekt": "I vaschdea di ned",
+    "desc": "Alltag"
+  }
+]

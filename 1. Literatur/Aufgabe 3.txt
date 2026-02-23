@@ -1,0 +1,11 @@
+✅ Ziel dieser Aufgabe:
+
+Du sammelst Quellen, Artikel, Tutorials und Paper zu:
+
+Large Language Models (LLMs): Funktionsweise, Sprachverständnis, Few-Shot Learning etc.
+
+GPT-API (z. B. GPT-4 via OpenAI): Wie du die API nutzt, ansteuerst, limitierst etc.
+
+Prompt Engineering: Wie beeinflusst man die Antworten durch gezielte Anweisungen?
+
+Text-to-Dialect / Style Transfer: Gibt es wissenschaftliche oder praktische Ansätze, Sprache stilistisch anzupassen?

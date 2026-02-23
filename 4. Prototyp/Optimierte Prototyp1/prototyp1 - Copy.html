@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="de" class="h-full scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Red ma Kärntnerisch! – Prototype (Übersetzer + Dialekt‑Chat)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+  <meta name="color-scheme" content="light dark">
+    <script>
+    // set initial theme before paint to avoid flicker
+    (function() {
+      try {
+        var saved = localStorage.getItem('rk-dark') === '1';
+        if (saved) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+	</script>
+<style>
+    :root {
+      --ring: 33 94% 60%;
+      --shadow-soft: 0 10px 50px -25px rgba(15, 23, 42, 0.25);
+      --border: rgba(15, 23, 42, 0.08);
+      --border-strong: rgba(15, 23, 42, 0.12);
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-strong: rgba(255, 255, 255, 0.92);
+      --surface-muted: rgba(255, 255, 255, 0.68);
+      --text-muted: rgba(71, 85, 105, 0.85);
+      --bg-body: #f9fafb;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .dark {
+      --border: rgba(148, 163, 184, 0.22);
+      --border-strong: rgba(148, 163, 184, 0.28);
+      --surface: rgba(15, 23, 42, 0.78);
+      --surface-strong: rgba(15, 23, 42, 0.92);
+      --surface-muted: rgba(15, 23, 42, 0.62);
+      --text-muted: rgba(226, 232, 240, 0.72);
+      --bg-body: #020617;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-body);
+      font-feature-settings: "liga" 1, "kern" 1;
+      letter-spacing: -0.01em;
+    }
+
+    a, button, input, textarea { transition: all 0.18s ease-in-out; }
+
+    .accent-gradient {
+      background-image:
+        radial-gradient(40% 60% at 10% 10%, rgba(251, 191, 36, 0.32) 0, rgba(251, 191, 36, 0) 60%),
+        radial-gradient(40% 60% at 90% 20%, rgba(52, 211, 153, 0.32) 0, rgba(52, 211, 153, 0) 60%),
+        radial-gradient(40% 60% at 15% 90%, rgba(56, 189, 248, 0.32) 0, rgba(56, 189, 248, 0) 60%);
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    .dark .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(226, 232, 240, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(226, 232, 240, 0.08) 1px, transparent 1px);
+    }
+
+    .glass {
+      background-color: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .surface-blur {
+      background-color: var(--surface-muted);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card {
+      border-radius: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .ringed { box-shadow: 0 0 0 1px hsl(var(--ring) / 0.65); }
+
+    .shine:hover { transform: translateY(-1px); }
+
+    .underline-wavy {
+      text-decoration-line: underline;
+      text-decoration-style: wavy;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      line-height: 1rem;
+      font-weight: 600;
+      background: var(--surface-muted);
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 0.55rem 1.35rem;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-strong);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid transparent;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.45);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.88), rgba(52, 211, 153, 0.85));
+      border-color: transparent;
+      color: rgb(23, 37, 84);
+      box-shadow: 0 12px 30px -12px rgba(251, 191, 36, 0.65);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: inherit;
+    }
+
+    .btn-ghost:hover { background: rgba(148, 163, 184, 0.08); }
+
+    .dark .btn-ghost:hover { background: rgba(148, 163, 184, 0.16); }
+
+    .btn-recording {
+      background: rgba(248, 113, 113, 0.18);
+      border-color: rgba(248, 113, 113, 0.55);
+      color: rgb(185, 28, 28);
+      box-shadow: 0 12px 30px -18px rgba(248, 113, 113, 0.6);
+    }
+
+    .dark .btn-recording {
+      background: rgba(248, 113, 113, 0.22);
+      color: rgb(254, 226, 226);
+    }
+
+    .btn-sm { font-size: 0.78rem; padding: 0.45rem 1.1rem; }
+    .btn-xs { font-size: 0.72rem; padding: 0.35rem 0.9rem; }
+
+    textarea, input {
+      font: inherit;
+      color: inherit;
+    }
+
+    .input-field {
+      width: 100%;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface-strong);
+      padding: 0.6rem 0.85rem;
+      font-size: 0.9rem;
+      color: inherit;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: hsl(var(--ring) / 0.9);
+      box-shadow: 0 0 0 3px hsl(var(--ring) / 0.25);
+    }
+
+    .input-field::placeholder { color: var(--text-muted); }
+
+    .dark .input-field { background: rgba(15, 23, 42, 0.85); }
+
+    .tab-btn {
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      padding: 0.55rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.88rem;
+      background: transparent;
+      color: inherit;
+    }
+
+    .tab-btn:hover { background: var(--surface-muted); }
+
+    .tab-active {
+      border-color: hsl(var(--ring) / 0.7);
+      background: rgba(253, 230, 138, 0.25);
+      color: rgb(120, 53, 15);
+    }
+
+    .dark .tab-active { color: rgb(254, 243, 199); background: rgba(253, 230, 138, 0.18); }
+
+    .chat-shell {
+      border-radius: 1.75rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: rgba(248, 250, 252, 0.7);
+      border-bottom: 1px solid var(--border);
+      color: inherit;
+    }
+
+    .dark .chat-header { background: rgba(15, 23, 42, 0.78); }
+
+    .chat-window {
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3));
+      max-height: 420px;
+      overflow-y: auto;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .dark .chat-window {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.55));
+    }
+
+    .input-bar {
+      padding: 0.9rem 1rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface-muted);
+    }
+
+    .dark .input-bar { background: rgba(15, 23, 42, 0.72); }
+
+    .bubble {
+      max-width: 85%;
+      padding: 0.65rem 0.85rem;
+      border-radius: 1.1rem;
+      border: 1px solid var(--border);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      backdrop-filter: blur(4px);
+    }
+
+    .bubble-user {
+      margin-left: auto;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .dark .bubble-user {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .bubble-assistant {
+      margin-right: auto;
+      background: rgba(254, 240, 199, 0.65);
+      border-color: rgba(250, 204, 21, 0.45);
+    }
+
+    .dark .bubble-assistant {
+      background: rgba(202, 138, 4, 0.25);
+      border-color: rgba(234, 179, 8, 0.45);
+    }
+
+    .bubble-meta {
+      margin: 0 auto;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      padding: 0;
+      max-width: 100%;
+      backdrop-filter: none;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      width: 100%;
+    }
+
+    .pill-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 9999px;
+      border: 1px dashed rgba(249, 115, 22, 0.6);
+      padding: 0.45rem 0.9rem;
+      font-size: 0.76rem;
+      background: rgba(253, 230, 138, 0.22);
+    }
+
+    .dark .pill-note {
+      background: rgba(253, 230, 138, 0.12);
+      color: rgb(253, 244, 199);
+    }
+
+    .readout {
+      border-radius: 1rem;
+      border: 1px dashed var(--border);
+      padding: 0.75rem;
+      background: var(--surface-strong);
+      min-height: 64px;
+      font-size: 0.9rem;
+    }
+
+    .dark .readout { background: rgba(15, 23, 42, 0.85); }
+
+    .readout-amber {
+      background: rgba(253, 230, 138, 0.28);
+      border-style: solid;
+      border-color: rgba(250, 204, 21, 0.45);
+    }
+
+    .dark .readout-amber {
+      background: rgba(202, 138, 4, 0.22);
+      border-color: rgba(234, 179, 8, 0.45);
+    }
+
+    .modal-backdrop {
+      background: radial-gradient(circle at 20% 20%, rgba(15, 23, 42, 0.35), transparent 55%),
+                  radial-gradient(circle at 80% 20%, rgba(147, 197, 253, 0.25), transparent 60%),
+                  rgba(2, 6, 23, 0.68);
+    }
+
+    #toast {
+      border: 1px solid var(--border-strong);
+      background: var(--surface-strong);
+      box-shadow: 0 18px 35px -20px rgba(15, 23, 42, 0.65);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 9999px;
+      border: 2px solid rgba(148, 163, 184, 0.35);
+      border-top-color: rgba(234, 179, 8, 0.9);
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.35rem;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 640px) {
+      .btn { width: fit-content; }
+      .btn-sm, .btn-xs { width: fit-content; }
+      .chat-window { max-height: 320px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-gray-900 dark:text-gray-100 accent-gradient">
+  <!-- Decorative blobs -->
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute -top-20 -left-24 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl"></div>
+    <div class="absolute top-40 -right-24 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl"></div>
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-sky-300/20 blur-3xl"></div>
+  </div>
+
+  <!-- Top Nav -->
+  <header class="sticky top-0 z-40 w-full surface-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-emerald-400 to-sky-400 text-gray-900 font-extrabold">R</span>
+        <span class="text-lg sm:text-xl font-extrabold">Red ma Kärntnerisch!</span>
+        <span class="hidden sm:inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium">Prototype</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-2 text-sm">
+        <a href="#demo" class="btn btn-ghost btn-xs">Live‑Demo</a>
+        <a href="#features" class="btn btn-ghost btn-xs">Features</a>
+        <a href="#technik" class="btn btn-ghost btn-xs">Technik</a>
+        <a href="#evaluation" class="btn btn-ghost btn-xs">Evaluation</a>
+        <a href="#privacy" class="btn btn-ghost btn-xs">Datenschutz</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button id="settingsBtn" type="button" class="hidden sm:inline-flex btn btn-ghost btn-xs">API Setup</button>
+        <button id="darkToggle" type="button" class="btn btn-ghost btn-xs">Dark Mode</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden grid-bg">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7">
+          <p class="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-gray-500">
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Bachelorprojekt – FH Kärnten
+          </p>
+          <h1 class="mt-3 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
+            KI‑Chatbot für den <span class="underline-wavy decoration-amber-400">Kärntner Dialekt</span>
+          </h1>
+          <p class="mt-5 text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl">
+            Hochdeutsch rein – Kärntnerisch raus. Schriftlich und gesprochen. Forschung trifft Praxis. Echtzeit‑Pipeline mit STT, LLM‑Regeln und TTS.
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            <span class="badge">LLM + Regelwerk</span>
+            <span class="badge">STT: Whisper</span>
+            <span class="badge">TTS: ElevenLabs</span>
+            <span class="badge">Frontend: Static</span>
+          </div>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#demo" class="btn btn-primary shine">Live‑Demo öffnen</a>
+            <a href="#technik" class="btn btn-ghost shine">Technik anschauen</a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="card glass ringed p-5">
+            <div class="text-xs uppercase tracking-wider text-gray-500">Use‑Cases</div>
+            <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+              <div class="card p-4 glass">
+                <div class="font-semibold">Sprachkultur</div>
+                <p class="mt-1 text-gray-600 dark:text-gray-300">Dialekt bewahren & erlebbar machen.</p>
+              </div>
+              <div class="card p-4 glass">
+                <div class="font-semibold">Tourismus</div>
+                <p class="mt-1 text-gray-600 dark:text-gray-300">Lokale Infos im Dialekt.</p>
+              </div>
+              <div class="card p-4 glass">
+                <div class="font-semibold">Bildung</div>
+                <p class="mt-1 text-gray-600 dark:text-gray-300">Dialekt im Unterricht vermitteln.</p>
+              </div>
+              <div class="card p-4 glass">
+                <div class="font-semibold">Accessibility</div>
+                <p class="mt-1 text-gray-600 dark:text-gray-300">Niedrigere Barrieren zu Services.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <svg class="absolute bottom-0 left-0 right-0" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg">
+      <path fill="currentColor" class="text-white dark:text-gray-950" d="M0,64L48,58.7C96,53,192,43,288,42.7C384,43,480,53,576,64C672,75,768,85,864,69.3C960,53,1056,11,1152,10.7C1248,11,1344,53,1392,74.7L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"/>
+    </svg>
+  </section>
+
+  <!-- Live Demo with Tabs -->
+  <section id="demo" class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-center justify-between gap-4 mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Live‑Demo</h2>
+      <span class="inline-flex items-center gap-2 text-xs font-medium text-gray-500">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Mock · Kein Backend
+      </span>
+    </div>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Zwei Modi: <strong>Übersetzer</strong> (HD → Dialekt) und <strong>Dialekt‑Chat</strong> (logische Antworten im Dialekt).</p>
+    <div class="mt-2 pill-note">
+      <span class="hidden sm:inline font-semibold">Tipp:</span>
+      <button type="button" class="underline decoration-dotted" id="settingsHintBtn">API‑Key eintragen</button>
+      für echte KI‑Antworten – sonst greifen die Offline‑Regeln.
+    </div>
+
+    <div class="mt-6">
+      <!-- Tabs -->
+      <div class="flex gap-2">
+        <button id="tabTrans" type="button" class="tab-btn tab-active">Übersetzer</button>
+        <button id="tabChat" type="button" class="tab-btn">Dialekt‑Chat</button>
+      </div>
+
+      <!-- Panels -->
+      <div class="mt-4">
+        <!-- Panel: Übersetzer -->
+        <div id="panelTrans">
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Translator Chat -->
+            <div class="chat-shell glass">
+              <div class="chat-header p-4 flex items-center justify-between">
+                <div class="font-semibold">Übersetzer</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">Enter = senden</div>
+              </div>
+              <div id="messages" class="chat-window">
+                <div class="bubble bubble-meta">Schreib auf Hochdeutsch. Ich antworte im Kärntner Dialekt (wörtliche Übersetzung).</div>
+              </div>
+              <div class="input-bar grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                <textarea id="input" placeholder="Schreib auf Hochdeutsch …" class="input-field resize-none" rows="1"></textarea>
+                <button id="sendBtn" type="button" class="btn btn-primary sm:self-start">Senden</button>
+                <div class="flex flex-wrap gap-2 text-xs sm:col-span-2">
+                  <button type="button" class="btn btn-ghost btn-xs ex-btn" data-ex="Guten Tag, wie geht es dir?">Beispiel 1</button>
+                  <button type="button" class="btn btn-ghost btn-xs ex-btn" data-ex="Ich habe das nicht gewusst.">Beispiel 2</button>
+                  <button type="button" class="btn btn-ghost btn-xs ex-btn" data-ex="Das ist sehr gut!">Beispiel 3</button>
+                </div>
+              </div>
+            </div>
+            <!-- Audio Mock -->
+            <div class="card glass ringed p-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="recBtn" type="button" class="btn btn-ghost btn-sm shine" aria-pressed="false">Aufnahme starten (Mock)</button>
+                <button id="sttBtn" type="button" class="btn btn-ghost btn-sm shine">Transkribieren (Mock STT)</button>
+                <button id="ttsBtn" type="button" class="btn btn-ghost btn-sm shine">Abspielen (Mock TTS)</button>
+              </div>
+              <div class="mt-4 grid md:grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Whisper‑Text (Mock)</div>
+                  <div id="sttText" class="readout">—</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Kärntnerisch</div>
+                  <div id="dialektText" class="readout readout-amber">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: Dialekt‑Chat -->
+        <div id="panelChat" class="hidden">
+          <div class="chat-shell glass">
+            <div class="chat-header p-4 flex items-center justify-between">
+              <div class="font-semibold">Dialekt‑Chat</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">Stell Fragen – der Bot antwortet logisch im Dialekt</div>
+            </div>
+            <div id="chatMsgs" class="chat-window">
+              <div class="bubble bubble-meta">Frag wos – i probier gscheit zu antwortn (im Dialekt).</div>
+            </div>
+            <div class="input-bar grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <textarea id="chatInput" placeholder="Dei Frog …" class="input-field resize-none" rows="1"></textarea>
+              <button id="chatSend" type="button" class="btn btn-primary sm:self-start">Senden</button>
+              <div class="flex flex-wrap gap-2 text-xs sm:col-span-2">
+                <button id="chatReset" type="button" class="btn btn-ghost btn-xs">Chat zurücksetzen</button>
+                <button type="button" class="btn btn-ghost btn-xs chat-ex" data-ex="Wie geht's dir heute?">Wie geht's?</button>
+                <button type="button" class="btn btn-ghost btn-xs chat-ex" data-ex="Was ist das Wetter in Villach?">Wetter</button>
+                <button type="button" class="btn btn-ghost btn-xs chat-ex" data-ex="Wo kann ich heute gut essen?">Tipp</button>
+                <button type="button" class="btn btn-ghost btn-xs chat-ex" data-ex="Kannst du mir bei der Aufgabe helfen?">Hilfe</button>
+                <button type="button" class="btn btn-ghost btn-xs chat-ex" data-ex="Hast du einen Motivationstipp fürs Studium?">Motivation</button>
+              </div>
+            </div>
+          </div>
+          <!-- Kleine Wissens-Kacheln -->
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 text-sm">
+            <div class="card glass ringed p-4">
+              <div class="font-semibold mb-1">Beispiele, die gut funktionieren</div>
+              <ul class="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-300">
+                <li>„Was mach i heut in Villach?“</li>
+                <li>„Hast a Lokal‑Empfehlung?“</li>
+                <li>„Kannst ma bei Mathe helfen?“</li>
+                <li>„Wie lern i gscheit fürs Examen?“</li>
+              </ul>
+            </div>
+            <div class="card glass ringed p-4">
+              <div class="font-semibold mb-1">Stil</div>
+              <p class="text-gray-600 dark:text-gray-300">Mittelkärntnerisch, freundlich‑direkt, kurze Sätze, praxisnah.</p>
+            </div>
+            <div class="card glass ringed p-4">
+              <div class="font-semibold mb-1">Grenzen</div>
+              <p class="text-gray-600 dark:text-gray-300">Kein Internetzugriff, keine echten Buchungen, Antworten sind heuristisch.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
+    <div class="absolute inset-0 modal-backdrop opacity-80"></div>
+    <div class="relative w-full max-w-2xl card glass ringed text-gray-900 dark:text-gray-100 p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-xl font-semibold">API‑Konfiguration</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Nutze OpenAI, OpenRouter oder einen kompatiblen Endpoint. Der Schlüssel wird nur lokal gespeichert.</p>
+        </div>
+        <button id="settingsClose" type="button" class="btn btn-ghost btn-xs">Schließen</button>
+      </div>
+      <form id="settingsForm" class="mt-6 grid gap-4">
+        <label class="grid gap-1 text-sm">
+          <span class="font-semibold">API‑Key <span class="text-red-500">*</span></span>
+          <input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-..." class="input-field" />
+          <span class="text-xs text-gray-500 dark:text-gray-400">Wird verschlüsselt im LocalStorage gespeichert. Für Tests kann auch ein temporärer Key verwendet werden.</span>
+        </label>
+        <div class="grid sm:grid-cols-2 gap-4 text-sm">
+          <label class="grid gap-1">
+            <span class="font-semibold">Base‑URL (optional)</span>
+            <input id="apiUrlInput" type="text" placeholder="https://api.openai.com/v1" class="input-field" />
+            <span class="text-xs text-gray-500 dark:text-gray-400">Leer lassen für OpenAI. Für OpenRouter z. B. <code>https://openrouter.ai/api/v1</code>.</span>
+          </label>
+          <label class="grid gap-1">
+            <span class="font-semibold">Modell</span>
+            <input id="apiModelInput" type="text" placeholder="gpt-4o-mini" class="input-field" />
+            <span class="text-xs text-gray-500 dark:text-gray-400">Beliebiges Chat‑Completion‑Modell. Empfohlen: <code>gpt-4o-mini</code> oder <code>gpt-3.5-turbo</code>.</span>
+          </label>
+        </div>
+        <label class="grid gap-1 text-sm">
+          <span class="font-semibold">Temperatur</span>
+          <input id="apiTempInput" type="number" min="0" max="2" step="0.1" class="input-field" />
+          <span class="text-xs text-gray-500 dark:text-gray-400">0.0 = sehr deterministisch, 0.7 = kreativer Dialekt. Standard 0.3.</span>
+        </label>
+        <div class="rounded-2xl border bg-amber-50/70 dark:bg-amber-500/10 px-4 py-3 text-xs text-amber-800 dark:text-amber-200">
+          <strong>Hinweis:</strong> Browser‑Fetch kann Keys nicht schützen. Für Produktivbetrieb Backend‑Proxy verwenden!
+        </div>
+        <div class="flex flex-wrap justify-end gap-2 pt-2">
+          <button type="button" id="settingsReset" class="btn btn-ghost btn-xs">Zurücksetzen</button>
+          <button type="submit" class="btn btn-primary btn-xs">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features" class="relative py-16">
+    <div class="absolute inset-0 grid-bg"></div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Kern‑Features</h2>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Was die finale Version liefert</p>
+      <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">Bidirektionale Kommunikation</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">Text & Sprache in beide Richtungen. Live oder Batch.</p>
+        </div>
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">Dialekt‑Korpus + Regelwerk</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">Eigene Datenbasis mit Varianten (Mittelkärnten), phonetische Regeln.</p>
+        </div>
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">LLM‑Steuerung</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">Prompt‑Templates, systematische Kontrollen, deterministischere Ausgaben.</p>
+        </div>
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">Echtzeit‑Pipeline</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">WebSocket‑Streaming (Audio/Text), Latenzziele & Messung.</p>
+        </div>
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">Evaluation</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">WER/CER (STT), MOS/UMOS (TTS), UX‑Fragebogen.</p>
+        </div>
+        <div class="card glass ringed p-4">
+          <div class="font-semibold">Datenschutz</div>
+          <p class="mt-1 text-gray-600 dark:text-gray-300">Keine Speicherung von Roh‑Audio, Logs anonymisiert, Keys nur Backend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technik -->
+  <section id="technik" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Technik‑Stack</h2>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Festgelegte Entscheidungen für das MVP</p>
+    <div class="mt-6 grid md:grid-cols-2 gap-6 text-sm">
+      <div class="card glass ringed p-4">
+        <div class="font-semibold">Pipeline</div>
+        <ul class="mt-2 list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-300">
+          <li>STT: <strong>Whisper</strong> (lokal für Batch, optional Realtime Fallback Deepgram)</li>
+          <li>LLM: <strong>GPT‑4</strong> via Backend‑Proxy + Dialekt‑Regelwerk</li>
+          <li>TTS: <strong>ElevenLabs</strong> Realtime, Fallback Piper offline</li>
+          <li>Frontend: Static/Vanilla</li>
+          <li>Backend: Node.js + Express, WebSocket für Streaming</li>
+        </ul>
+      </div>
+      <div class="card glass ringed p-4">
+        <div class="font-semibold">Sicherheit & Privacy</div>
+        <ul class="mt-2 list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-300">
+          <li>Keine Speicherung von Audiodaten</li>
+          <li>Anonymisierte Logs, Rate Limits</li>
+          <li>API‑Keys ausschließlich im Backend</li>
+          <li>CORS für definierte Origins</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evaluation -->
+  <section id="evaluation" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Evaluation & KPIs</h2>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Wie wir Qualität nachweisen</p>
+    <div class="mt-6 grid md:grid-cols-3 gap-4 text-sm">
+      <div class="card glass ringed p-4"><div class="font-semibold">STT‑Genauigkeit</div><p class="mt-1">WER/CER auf 20–30 Sätzen (HD + Dialekt). Ziel: WER &lt; 12%.</p></div>
+      <div class="card glass ringed p-4"><div class="font-semibold">TTS‑Natürlichkeit</div><p class="mt-1">MOS/UMOS mit 15–25 Testhörer:innen. Ziel: MOS ≥ 4.0.</p></div>
+      <div class="card glass ringed p-4"><div class="font-semibold">UX‑Metriken</div><p class="mt-1">Verständlichkeit, Authentizität, Latenz‑Wahrnehmung, Task‑Success.</p></div>
+    </div>
+  </section>
+
+  <!-- Datenschutz -->
+  <section id="privacy" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Datenschutz</h2>
+    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Transparenz für Nutzer:innen</p>
+    <div class="mt-6 card glass ringed p-4 text-sm">
+      <p>Es werden <strong>keine Roh‑Audiodaten gespeichert</strong>. Transkripte können lokal verarbeitet werden. API‑Zugriffe laufen über einen Server‑Proxy mit Zugriffsbeschränkungen. Statistiken werden nur anonymisiert erhoben (z. B. Latenzen, Fehlerraten). Opt‑out jederzeit möglich.</p>
+    </div>
+  </section>
+
+  <footer class="border-t py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-gray-600 dark:text-gray-300">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>© <span id="year"></span> Red ma Kärntnerisch! – Bachelorprojekt FH Kärnten</div>
+        <div class="flex gap-4">
+          <a href="#demo" class="hover:underline">Demo</a>
+          <a href="#technik" class="hover:underline">Technik</a>
+          <a href="#privacy" class="hover:underline">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="hidden fixed bottom-6 right-6 max-w-sm rounded-2xl border px-4 py-3 text-sm font-medium shadow-lg bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-gray-100"></div>
+
+  <script>
+    // --- Dark mode persistence ---
+    (function() {
+      const btn = document.getElementById('darkToggle');
+      function syncLabel() {
+        btn.textContent = document.documentElement.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
+      }
+      syncLabel();
+      btn.addEventListener('click', function() {
+        const isDark = document.documentElement.classList.toggle('dark');
+        try { localStorage.setItem('rk-dark', isDark ? '1' : '0'); } catch(e) {}
+        syncLabel();
+      });
+    })();
+    // --- Year in footer ---
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // --- Simple rules Hochdeutsch -> Kärntnerisch (Mock) ---
+    function toKaerntnerisch(text) {
+      if (!text) return '';
+      const rules = [
+        [/guten tag/gi, 'Grias di'],
+        [/hallo/gi, 'Servas'],
+        [/ich habe/gi, 'I hob'],
+        [/ich hab/gi, 'I hob'],
+        [/ich bin/gi, 'I bin'],
+        [/du bist/gi, 'Du bist'],
+        [/nicht/gi, 'ned'],
+        [/kein/gi, 'koan'],
+        [/klein/gi, 'klaa'],
+        [/ganz/gi, 'gonz'],
+        [/gut/gi, 'leiwaund'],
+        [/sehr/gi, 'voll'],
+        [/vielleicht/gi, 'vielleichts'],
+        [/was/gi, 'wos'],
+        [/wie/gi, 'wia'],
+        [/auch/gi, 'aa'],
+        [/euch/gi, 'enk'],
+        [/euer/gi, 'eich'],
+        [/mir/gi, 'ma'],
+        [/dir/gi, 'da'],
+        [/mit/gi, 'mitn'],
+        [/ich/gi, 'I'],
+        [/nicht\\s+gewusst/gi, 'ned gwusst'],
+        [/sehr gut/gi, 'ur leiwaund'],
+      ];
+      let out = text;
+      rules.forEach(([re, subst]) => { out = out.replace(re, subst); });
+      return out;
+    }
+
+    // ---------- Übersetzer: chat logic ----------
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addBubble(container, text, role, opts = {}) {
+      const div = document.createElement('div');
+      if (role === 'user') {
+        div.className = 'bubble bubble-user';
+      } else if (role === 'assistant') {
+        div.className = 'bubble bubble-assistant';
+      } else {
+        div.className = 'bubble bubble-meta';
+      }
+      if (opts.asHTML) {
+        div.innerHTML = text;
+      } else {
+        div.textContent = text;
+      }
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      return div;
+    }
+
+    const toastEl = document.getElementById('toast');
+    let toastTimeout;
+
+    function showToast(message, tone = 'info') {
+      if (!toastEl) return;
+      toastEl.textContent = message;
+      toastEl.classList.remove('hidden');
+      toastEl.classList.toggle('border-emerald-400', tone === 'success');
+      toastEl.classList.toggle('border-amber-400', tone === 'info');
+      toastEl.classList.toggle('border-red-400', tone === 'error');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toastEl.classList.add('hidden'), 4200);
+    }
+
+    const apiConfig = {
+      key: localStorage.getItem('rk-api-key') || '',
+      url: localStorage.getItem('rk-api-url') || '',
+      model: localStorage.getItem('rk-api-model') || 'gpt-4o-mini',
+      temperature: parseFloat(localStorage.getItem('rk-api-temp') || '0.3'),
+    };
+
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsClose = document.getElementById('settingsClose');
+    const settingsForm = document.getElementById('settingsForm');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const apiUrlInput = document.getElementById('apiUrlInput');
+    const apiModelInput = document.getElementById('apiModelInput');
+    const apiTempInput = document.getElementById('apiTempInput');
+    const settingsReset = document.getElementById('settingsReset');
+
+    function applySettingsToForm() {
+      if (apiKeyInput) apiKeyInput.value = apiConfig.key;
+      if (apiUrlInput) apiUrlInput.value = apiConfig.url;
+      if (apiModelInput) apiModelInput.value = apiConfig.model;
+      if (apiTempInput) apiTempInput.value = apiConfig.temperature ?? 0.3;
+    }
+
+    function openSettings() {
+      if (!settingsModal) return;
+      settingsModal.classList.remove('hidden');
+      settingsModal.classList.add('flex');
+      applySettingsToForm();
+    }
+
+    function closeSettings() {
+      if (!settingsModal) return;
+      settingsModal.classList.add('hidden');
+      settingsModal.classList.remove('flex');
+    }
+
+    settingsBtn?.addEventListener('click', openSettings);
+    document.getElementById('settingsHintBtn')?.addEventListener('click', openSettings);
+    settingsClose?.addEventListener('click', closeSettings);
+    settingsModal?.addEventListener('click', (evt) => {
+      if (evt.target === settingsModal) closeSettings();
+    });
+
+    settingsForm?.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      apiConfig.key = apiKeyInput.value.trim();
+      apiConfig.url = apiUrlInput.value.trim();
+      apiConfig.model = apiModelInput.value.trim() || 'gpt-4o-mini';
+      apiConfig.temperature = parseFloat(apiTempInput.value || '0.3');
+      if (Number.isNaN(apiConfig.temperature)) apiConfig.temperature = 0.3;
+      localStorage.setItem('rk-api-key', apiConfig.key);
+      localStorage.setItem('rk-api-url', apiConfig.url);
+      localStorage.setItem('rk-api-model', apiConfig.model);
+      localStorage.setItem('rk-api-temp', apiConfig.temperature.toString());
+      closeSettings();
+      showToast('API‑Einstellungen gespeichert.', 'success');
+    });
+
+    settingsReset?.addEventListener('click', () => {
+      apiConfig.key = '';
+      apiConfig.url = '';
+      apiConfig.model = 'gpt-4o-mini';
+      apiConfig.temperature = 0.3;
+      localStorage.removeItem('rk-api-key');
+      localStorage.removeItem('rk-api-url');
+      localStorage.removeItem('rk-api-model');
+      localStorage.removeItem('rk-api-temp');
+      applySettingsToForm();
+      showToast('API‑Einstellungen zurückgesetzt. Fallback‑Regeln werden verwendet.', 'info');
+    });
+
+    applySettingsToForm();
+
+    async function callLLM(messages, { purpose } = {}) {
+      if (!apiConfig.key) {
+        throw new Error('Kein API‑Key konfiguriert. Öffne „API Setup“ und trage einen Schlüssel ein.');
+      }
+      const endpoint = (apiConfig.url || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions';
+      const payload = {
+        model: apiConfig.model || 'gpt-4o-mini',
+        messages,
+        temperature: typeof apiConfig.temperature === 'number' && !Number.isNaN(apiConfig.temperature)
+          ? apiConfig.temperature : 0.3,
+      };
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiConfig.key,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errTxt = await res.text();
+        throw new Error('API‑Fehler (' + res.status + '): ' + errTxt);
+      }
+      const data = await res.json();
+      const content = data?.choices?.[0]?.message?.content?.trim();
+      if (!content) throw new Error('Keine Antwort vom Modell erhalten.');
+      return content;
+    }
+
+    const translatorSystemPrompt = 'Du bist ein hochpräziser Übersetzer für mittelkärntnerischen Dialekt. Gib nur den übersetzten Satz zurück, keine Erklärungen. Pflege informellen, warmherzigen Ton, bleib logisch.';
+    const chatSystemPrompt = 'Du bist ein smarter Chatbot aus Kärnten. Antworte immer im mittelkärntnerischen Dialekt, kurze klare Sätze, logisch und hilfreich. Vermeide Hochdeutsch. Bleib respektvoll, keine verletzenden Inhalte.';
+
+    async function translateHDToDialekt(text) {
+      const msgs = [
+        { role: 'system', content: translatorSystemPrompt },
+        { role: 'user', content: 'Übersetze ins mittelkärntnerische Dialektdeutsch. Gib nur den Dialekt zurück. Text: "' + text + '"' },
+      ];
+      return callLLM(msgs, { purpose: 'translate' });
+    }
+
+    async function chatWithDialect(history) {
+      const msgs = [{ role: 'system', content: chatSystemPrompt }, ...history];
+      return callLLM(msgs, { purpose: 'chat' });
+    }
+
+    function createThinking(container) {
+      return addBubble(container, '<span class="spinner"></span><span class="align-middle">… denk nach</span>', 'assistant', { asHTML: true });
+    }
+
+    async function sendMessage() {
+      const t = input.value.trim();
+      if (!t) return;
+      addBubble(messages, t, 'user');
+      input.value = '';
+      const thinking = createThinking(messages);
+      try {
+        const translated = await translateHDToDialekt(t);
+        messages.removeChild(thinking);
+        addBubble(messages, translated, 'assistant');
+      } catch (err) {
+        console.error(err);
+        messages.removeChild(thinking);
+        const fallback = toKaerntnerisch(t) || 'I bin ma ned sicher – probier da Key in da API‑Konfiguration ei zum tragen.';
+        addBubble(messages, fallback, 'assistant');
+        showToast(err.message, 'error');
+      }
+    }
+
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    sendBtn?.addEventListener('click', sendMessage);
+
+    document.querySelectorAll('.ex-btn').forEach(btn => {
+      btn.addEventListener('click', () => { input.value = btn.dataset.ex; input.focus(); });
+    });
+
+    // ---------- Audio mock ----------
+    const recBtn = document.getElementById('recBtn');
+    const sttBtn = document.getElementById('sttBtn');
+    const ttsBtn = document.getElementById('ttsBtn');
+    const sttText = document.getElementById('sttText');
+    const dialektText = document.getElementById('dialektText');
+    let recording = false;
+
+    recBtn?.addEventListener('click', () => {
+      recording = !recording;
+      recBtn.textContent = recording ? '● Aufnahme läuft (Mock)' : 'Aufnahme starten (Mock)';
+      recBtn.classList.toggle('btn-recording', recording);
+      recBtn.setAttribute('aria-pressed', recording ? 'true' : 'false');
+    });
+
+    sttBtn?.addEventListener('click', () => {
+      const t = 'Hallo, ich bin gerade in Villach und brauche eine Auskunft.';
+      sttText.textContent = t;
+      dialektText.textContent = toKaerntnerisch(t);
+    });
+
+    ttsBtn?.addEventListener('click', () => {
+      alert('TTS (Mock) – Dialekt wird abgespielt');
+    });
+
+    // ---------- Dialekt‑Chat: intent-based logic ----------
+    const chatMsgs = document.getElementById('chatMsgs');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const chatResetBtn = document.getElementById('chatReset');
+    const chatIntroText = chatMsgs?.querySelector('div')?.textContent?.trim() || 'Frag wos – i probier gscheit zu antwortn (im Dialekt).';
+
+    const lokaltipps = [
+      'Geh am Drauufer spaziern und hol da a Eis – simpel, oba guat.',
+      'A gscheite Hauskost beim bodenständign Wirt – Preis passt, Portionen aa.',
+      'Villacher Alpenstraße auffi – Aussicht is leiwaund (wennst a Auto host).',
+      'Kleiner Stadtbummel am Hauptplatz, dann Kaffee – klassisch und gemütlich.'
+    ];
+    const studium = [
+      'Lern täglich 45–60 Minuten fokussiert, ned marathonn.',
+      'Schreib da a kurze Zusammenfassung nach jeder Einheit – bleibt bessa picken.',
+      'Frag de Prof früh, wenn wos unklar is – spart da Nerven.',
+      'Mach 2–3 Übungsbeispiele statt 20 Seiten Theorie lesen.'
+    ];
+
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function timeNow(){ const d=new Date(); return d.toLocaleTimeString(); }
+    function weekday(){ return ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][new Date().getDay()]; }
+
+    function replyFor(text) {
+      const t = text.toLowerCase();
+
+      // Small knowledge base / intents
+      if (/hallo|servus|gria[sß]|hi|hey/.test(t)) return 'Servas! Wos gibt’s?';
+      if (/wie geht/.test(t)) return 'Jo passt, danke – a bissl stressig, oba geht scho. Wia schaugts bei da aus?';
+      if (/wetter|regen|sonne|temperatur/.test(t)) return 'I bin ka Wetterfrosch, oba nimm a Joppe mit – in Kärnten wechselt’s gschwind.';
+      if (/villach|klagenfurt|kärnten/.test(t)) return 'In '+(t.includes('villach')?'Villach':'Kärnten')+' geht imma wos: '+pick(lokaltipps);
+      if (/essen|lokal|restaurant|mittag|mittagessen|abendessen/.test(t)) return 'I würd a bodenständign Wirt empfehlen: '+pick(lokaltipps);
+      if (/hilfe|kannst du.*helfen|problem|fehler|bug/.test(t)) return 'Sicher. Erzähl gnaue – wos geht ned? Gemma Schritt für Schritt durch.';
+      if (/studium|fh|prof|prüfung|lernen|examen|klausur/.test(t)) return 'Für’s Studium: '+pick(studium);
+      if (/motivation|keine lust|prokrastinier/.test(t)) return 'Kloa Tipp: 10‑Minuten‑Regel. Fang klan an – meistens bleibst dann eh dabei.';
+      if (/zeit|uhr|spät/.test(t)) return 'Es is grad '+timeNow()+' am '+weekday()+'. Pack zam, mach a Pause.';
+      if (/danke|thx|dankeschön/.test(t)) return 'Gern gschehn! Wenn no wos is, sog einfach.';
+      if (/sport|laufen|fitness|training/.test(t)) return 'A lockere 20‑Minuten‑Rundn reicht. Wichtig is: regelmäßig, ned extrem.';
+      if (/projekt|chatbot|dialekt|korpus/.test(t)) return 'Fokus: Mittelkärntnerisch, klares Regelwerk und a Handvoll Beispiel‑Sätze, dann iteriern.';
+      if (/idee|vorschlag|was soll ich machen/.test(t)) return 'Pick a klans Ziel für heit und bring des bis zum Ende. Danach belohn di – Kaffee oder Spaziern.';
+
+      // Fallback
+      return 'Klingt spannend. I würd sagen: mach langsam, denk a bissl nach und wennst magst, schaun ma glei drüber.';
+    }
+
+    function chatAdd(container, text, role) {
+      addBubble(container, text, role);
+    }
+
+    let chatHistory = [];
+
+    function sendChat() {
+      const t = chatInput.value.trim();
+      if (!t) return;
+      chatAdd(chatMsgs, t, 'user');
+      chatInput.value = '';
+      chatHistory.push({ role: 'user', content: t });
+      const thinking = createThinking(chatMsgs);
+      chatMsgs.scrollTop = chatMsgs.scrollHeight;
+      (async () => {
+        try {
+          const answer = await chatWithDialect(chatHistory);
+          chatHistory.push({ role: 'assistant', content: answer });
+          chatMsgs.removeChild(thinking);
+          addBubble(chatMsgs, answer, 'assistant');
+        } catch (err) {
+          console.error(err);
+          chatMsgs.removeChild(thinking);
+          const fallback = replyFor(t);
+          chatHistory.push({ role: 'assistant', content: fallback });
+          addBubble(chatMsgs, fallback, 'assistant');
+          showToast(err.message, 'error');
+        }
+      })();
+    }
+
+    chatInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } });
+    chatSend?.addEventListener('click', sendChat);
+    chatResetBtn?.addEventListener('click', () => {
+      chatHistory = [];
+      if (!chatMsgs) return;
+      chatMsgs.innerHTML = '';
+      addBubble(chatMsgs, chatIntroText, 'meta');
+      showToast('Chat zurückgesetzt.', 'info');
+    });
+    document.querySelectorAll('.chat-ex').forEach(btn => { btn.addEventListener('click', () => { chatInput.value = btn.dataset.ex; chatInput.focus(); }); });
+
+    // --- Tabs toggle ---
+    const tabTrans = document.getElementById('tabTrans');
+    const tabChat = document.getElementById('tabChat');
+    const panelTrans = document.getElementById('panelTrans');
+    const panelChat = document.getElementById('panelChat');
+
+    function activate(tab) {
+      if (tab === 'trans') {
+        tabTrans.classList.add('tab-active');
+        tabChat.classList.remove('tab-active');
+        panelTrans.classList.remove('hidden');
+        panelChat.classList.add('hidden');
+      } else {
+        tabChat.classList.add('tab-active');
+        tabTrans.classList.remove('tab-active');
+        panelChat.classList.remove('hidden');
+        panelTrans.classList.add('hidden');
+      }
+    }
+    tabTrans?.addEventListener('click', () => activate('trans'));
+    tabChat?.addEventListener('click', () => activate('chat'));
+  </script>
+</body>
+</html>

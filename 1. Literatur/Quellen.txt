@@ -1,0 +1,44 @@
+Kärntner Dialekt - Wörterbuch:
+1. https://www.welcome2villach.at/en/crash-course-in-the-carinthian-dialect
+2. https://www.kaernten.at/content/beim-wort-genommen/mundart/
+3. https://de.wiktionary.org/wiki/Verzeichnis:Deutsch/K%C3%A4rntner_Mundart
+4. https://www.ueberreuter.at/shop/sprechen-sie-kaerntnerisch/ ----> Sprechen Sie Kärntnerisch Buch
+5. https://www.verlagheyn.at/products/kleine_kaerntner_mundartkunde_mit_woerterbuch ----> Kleine Kärntner Mundartkunde mit Wörterbuch
+6. https://leo.oitzl.com/bildung/sprache/charakteristika-kaerntnerisch
+7. https://www.wikiwand.com/de/articles/K%C3%A4rntner_Mundart
+8. https://wwwg.uni-klu.ac.at/spw/oenf/WoerterbuchNeuDateien/Einleitung.htm
+9. https://deinkikompass.de/blog/chatgpt-api-erklaert
+10. https://www.iese.fraunhofer.de/blog/wie-funktionieren-llms/
+11. https://www.sistrix.de/frag-sistrix/seo-grundlagen/large-language-model/
+12. https://www.databricks.com/de/glossary/prompt-engineering
+13. https://the-decoder.de/neue-prompt-methode-laesst-ki-modelle-schreibstile-besser-nachahmen/
+14. https://bloggerpilot.com/ki-schreibstil/
+
+SST - optionen & bewertungen
+15. https://openai.com/de-DE/index/whisper/
+16. https://ai-automation-engineers.de/blog/2025-09-14-openai-whisper-spracherkennung-revolution/
+17. https://www.trendingtopics.eu/tu-graz-entwickelt-spracherkennung-fuer-oesterreichische-dialekte/
+18. https://cloud.google.com/speech-to-text?hl=de
+19. https://www.netzsieger.de/p/google-cloud-speech-to-text
+20. https://clickup.com/de/blog/511880/whisper-vs-google-sprach-zu-text
+21. https://www.g2.com/de/products/google-cloud-speech-to-text/reviews?page=3&qs=pros-and-cons
+22. https://www.callone.de/blog/text-to-speech-8-tts-anbieter-und-deren-ki-stimmen-im-vergleich/
+23. https://deepgram.com/self-hosted?utm_source=chatgpt.com
+24. https://developers.deepgram.com/reference/custom-endpoints?utm_source=chatgpt.com
+25. https://developers.deepgram.com/trust-security/data-privacy-compliance?utm_source=chatgpt.com
+26. https://developers.deepgram.com/changelog/speech-to-text-changelog?utm_source=chatgpt.com
+
+TTS - optionen & bewertungen
+27. https://elevenlabs.io/
+28. https://elevenlabs.io/docs/resources/zero-retention-mode
+29. https://platform.openai.com/audio/realtime
+30. https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service
+31. https://azure.microsoft.com/de-de/products/ai-services/ai-speech
+32. https://learn.microsoft.com/en-us/azure/ai-services/speech-service/index-text-to-speech
+33. https://cloud.google.com/text-to-speech/docs/list-voices-and-types
+34. https://learn.microsoft.com/en-us/azure/ai-services/speech-service/rest-text-to-speech?tabs=streaming
+35. https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=tts
+
+
+Sonstiges:
+https://elevenlabs.io/     ---> Für Audioausgabe

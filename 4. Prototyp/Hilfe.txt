@@ -1,0 +1,47 @@
+Tailwind CSS = CSS-Framework für schnelles Styling
+
+CSS-Styling (Zeilen 20-80)
+
+Die Seite verwendet hauptsächlich Tailwind CSS, aber hat auch eigene CSS-Regeln für:
+Glaseffekte (durchsichtige Bereiche mit Blur-Effekt)
+Karten-Design (abgerundete Boxen)
+Farbverläufe und Animationen
+-----------------------------------------------------------------------------------------
+Header/Navigation (Zeilen 90-110)
+
+Sticky Navigation oben
+Logo "Red ma Kärntnerisch!"
+Menüpunkte: Demo, Features, Technik, etc.
+Dark Mode Toggle
+API Setup Button
+-----------------------------------------------------------------------------------------
+Hero-Bereich (Zeilen 120-180)
+
+Große Überschrift mit dem Projekttitel
+Beschreibung des Chatbots
+Technologie-Badges (LLM, Whisper, ElevenLabs)
+Call-to-Action Buttons
+-----------------------------------------------------------------------------------------
+Live-Demo Bereich (Zeilen 200-350)
+
+Zwei Modi mit Tabs:
+
+Übersetzer-Modus:
+
+Eingabefeld für Hochdeutsch
+Ausgabe in Kärntner Dialekt
+Audio-Mock-Buttons (Aufnahme, STT, TTS)
+
+Dialekt-Chat-Modus:
+
+Normaler Chatbot, der auf Kärntnerisch antwortet
+Chat-Verlauf wird gespeichert
+Reset-Funktion
+-----------------------------------------------------------------------------------------
+Weitere Bereiche (Zeilen 400-600)
+
+Features: Was der Chatbot kann
+Technik-Stack: Verwendete Technologien
+Evaluation: Wie die Qualität gemessen wird
+Datenschutz: Privacy-Informationen
+

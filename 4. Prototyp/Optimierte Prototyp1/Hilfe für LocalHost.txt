@@ -1,0 +1,10 @@
+Im Explorer einfach Shift + Rechtsklick und PowerShell hier öffnen oder CMD hier öffnen
+
+Wenn Python installiert ist:
+python -m http.server 8000
+
+Wenn Node installiert ist:
+npx http-server
+
+Im WebServer/Browser dann diesen Link eingeben:
+http://localhost:8000/prototyp1.html

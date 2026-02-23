@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kärntner Dialekt Chatbot – Prototype</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="app-header">
+    <div class="branding">
+      <div class="logo">🗣️</div>
+      <div>
+        <h1>Kärntner Dialekt Chatbot</h1>
+        <p class="subtitle">Bachelorprojekt – Mittelkärntnerisch · Demo ohne Backend</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="darkToggle" title="Dark Mode umschalten">🌓</button>
+      <button id="exportChat" title="Chat exportieren">💾</button>
+      <button id="openSettings" title="Einstellungen">⚙️</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="tabs">
+      <button class="tab active" data-tab="translator">Übersetzer</button>
+      <button class="tab" data-tab="chatbot">Live-Chat</button>
+      <button class="tab" data-tab="knowledge">Wissen</button>
+    </nav>
+
+    <section id="translator" class="tabpanel active">
+      <div class="panel-head">
+        <h2>Hochdeutsch → Kärntnerisch</h2>
+        <div class="inline-controls">
+          <label>Dialekt-Intensität
+            <input type="range" id="intensity" min="0" max="100" step="10" value="70">
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="phoneticsToggle" checked>
+            <span class="slider"></span>
+            <span class="switch-label">Phonetik</span>
+          </label>
+        </div>
+      </div>
+      <div class="grid-2">
+        <textarea id="src" placeholder="Schreib hier in Hochdeutsch ..."></textarea>
+        <div class="out-wrap">
+          <div id="out" class="output" aria-live="polite"></div>
+          <div class="out-actions">
+            <button id="copyOut">Kopieren</button>
+          </div>
+        </div>
+      </div>
+      <div class="hint">Hinweis: Regeln sind prototypisch und auf Mittelkärnten ausgerichtet. Feinheiten weichen regional ab.</div>
+    </section>
+
+    <section id="chatbot" class="tabpanel">
+      <div class="chat">
+        <div id="chatStream" class="chat-stream"></div>
+        <form id="chatForm" class="chat-input" autocomplete="off">
+          <input id="chatMsg" type="text" placeholder="Frag was ... (z. B. Was ist heute in Villach los?)" required/>
+          <button type="submit">Senden</button>
+        </form>
+      </div>
+      <details class="explain">
+        <summary>Wie funktioniert's?</summary>
+        <p>Der Bot klassifiziert Intents (Gruß, Info, Zeit, Wetter-Stub, Projektfragen, Smalltalk), durchsucht das Korpus (Keyword-Matching) und generiert eine logische Antwort. Danach wird die Antwort mit den Dialektregeln transformiert. Für die echte Version ersetzt du <code>bot_logic.js</code> durch einen API‑Call (z. B. GPT) und lässt nur das Dialekt‑Postprocessing laufen.</p>
+      </details>
+    </section>
+
+    <section id="knowledge" class="tabpanel">
+      <h2>Korpus & Wissensbasis</h2>
+      <p>Diese Demo lädt <code>data/corpus.json</code> und eine kleine Wissensbasis. Du kannst unten live erweitern und speichern (localStorage).</p>
+      <div class="grid-2">
+        <div>
+          <h3>Beispiele (Hochdeutsch → Kärntnerisch)</h3>
+          <ul id="examples"></ul>
+        </div>
+        <div>
+          <h3>Neuen Eintrag hinzufügen</h3>
+          <label>Hochdeutsch
+            <input id="newHd" type="text" placeholder="Guten Tag"/>
+          </label>
+          <label>Kärntnerisch
+            <input id="newDialekt" type="text" placeholder="Grias di"/>
+          </label>
+          <label>Beschreibung
+            <textarea id="newDesc" placeholder="Wann/wo verwendet, Quelle …"></textarea>
+          </label>
+          <div class="form-row">
+            <button id="addEntry">Hinzufügen</button>
+            <button id="saveLocal">Lokal speichern</button>
+            <button id="resetLocal">Lokal zurücksetzen</button>
+          </div>
+        </div>
+      </div>
+      <h3>Quellen (Auszug)</h3>
+      <ul class="sources">
+        <li>Welcome2Villach (Redewendungen, regionale Beispiele)</li>
+        <li>Kaernten.at Dialektseiten</li>
+        <li>Wiktionary/Wikiwand (Einträge zu Kärntner Mundart)</li>
+        <li>„Sprechen Sie Kärntnerisch?“ (Buch), „Kleine Kärntner Mundartkunde“</li>
+        <li>Uni Klagenfurt – Materialien zur Mundartforschung</li>
+      </ul>
+      <p class="hint">Für die wissenschaftliche Arbeit: Bitte im echten Projekt die exakten Seiten/Seitenzahlen angeben.</p>
+    </section>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h3>Einstellungen</h3>
+      <label>
+        Antwort-Latenz (ms)
+        <input id="latency" type="number" min="0" max="5000" step="50" value="200">
+      </label>
+      <label>
+        Dialekt nur für Bot-Antworten anwenden
+        <input id="botOnly" type="checkbox" checked>
+      </label>
+      <menu>
+        <button value="cancel">Schließen</button>
+        <button id="saveSettings" value="default">Speichern</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <footer class="app-footer">
+    <span>© 2025 – Prototyp ohne Server · Frontend-only</span>
+    <a href="#" id="downloadKB">Wissensbasis exportieren</a>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/dialect_rules.js"></script>
+  <script src="js/llm.js"></script>
+  <script src="js/bot_logic.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

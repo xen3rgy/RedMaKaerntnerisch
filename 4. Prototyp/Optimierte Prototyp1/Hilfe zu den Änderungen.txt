@@ -1,0 +1,81 @@
+1) Head & Basis
+
+Google-Font Inter eingebunden (+ preconnect), globale Schrift & Spacing angepasst.
+
+Tailwind bleibt, Dark-Mode-Init bleibt.
+
+body-Hintergrund jetzt über CSS-Variablen (--bg-body) statt festen Klassen.
+
+2) CSS komplett überarbeitet (Design-System)
+
+Viele CSS-Variablen für Border/Surface/Shadow/Text eingeführt (hell/dunkel getrennt).
+
+Neue, wiederverwendbare Komponentenklassen: .btn, .btn-primary, .btn-ghost, .btn-recording, .input-field, .tab-btn, .tab-active, .chat-shell, .chat-header, .chat-window, .bubble-*, .readout, .surface-blur, .pill-note, .spinner usw.
+
+Grid-Hintergrund, Glas-Effekte, Ringe/Schlagschatten, Wellen-Unterstreichung neu/besser.
+
+Mobile Tweaks (kleinere Höhen, Buttons mit fester Breite vermieden).
+
+3) Navigation / Hero
+
+Header von „Border + Backdrop“ auf .surface-blur umgestellt (sauberere Optik).
+
+Links/Buttons im Header und Hero konsequent auf .btn-Varianten umgestellt.
+
+4) Live-Demo – Struktur & UI
+
+Tabs: eigene .tab-btn + .tab-active statt ad-hoc Tailwind.
+
+Übersetzer-Panel:
+
+Chat-Container neu als .chat-shell mit .chat-header, .chat-window, .input-bar.
+
+Beispiel-Buttons jetzt .btn btn-ghost btn-xs.
+
+Audio-Mock:
+
+Buttons zu .btn-Varianten, Aufnahme-Status mit .btn-recording + aria-pressed.
+
+Ausgaben in .readout/.readout-amber statt nackten divs.
+
+Dialekt-Chat: gleiche Shell wie Übersetzer; Quick-Actions als .btn-ghost.
+
+5) Bubbles & Messages
+
+Funktion addBubble(...) gibt jetzt styling-klare Klassen:
+
+bubble-user, bubble-assistant, bubble-meta statt handgestrickte Tailwind-Ketten.
+
+6) Hinweis/Tipps
+
+Alte gelbe Hinweis-Badge ersetzt durch .pill-note (dezenter, konsistenter).
+
+7) Settings-Modal
+
+Von „plain border + bg“ auf card glass ringed + .input-field/.btn umgebaut.
+
+Alle Buttons im Modal auf .btn-Stil, Reset/Speichern angepasst.
+
+8) Accessibility & UX
+
+Mehr type="button", klare aria-pressed beim Record-Button, bessere Fokus-Ringe/States.
+
+Spinners & „Thinking…“-States vorbereitet (Klasse .spinner).
+
+9) Code-Aufräumung
+
+Viele wiederholte Tailwind-Utilities durch eigene Utility-Klassen ersetzt → weniger Duplication, konsistenter Look.
+
+Keine Logikänderung bei Dialekt-Regeln oder API-Config; das ist primär UI/Style-Refactor.
+
+Was du testen solltest
+
+Dark/Light-Mode (Header, Chat, Inputs, Buttons).
+
+Tab-Wechsel (Zustände/Styles).
+
+Recorder-Button (Toggle, aria-pressed, rote Aufnahme-Optik).
+
+Scroll-Verhalten im Chat (Auto-Scroll nach Send).
+
+Modal öffnen/schließen, speichern/zurücksetzen.
